@@ -48,21 +48,29 @@ public class JSONTranslator implements Translator {
 
                 JSONObject countryData = jsonArray.getJSONObject(i);
                 String countryCode = countryData.getString("alpha3");
+                if (countryCodes.contains(countryCode))
+                    continue;
+                this.countryCodes.add(countryCode);
 
                 List<String> languages = new ArrayList<>();
-
-                // TODO Task C: record this countryCode in the correct instance variable
 
                 // iterate through the other keys to get the information that we need
                 for (String key : countryData.keySet()) {
                     if (!key.equals("id") && !key.equals("alpha2") && !key.equals("alpha3")) {
-                        String languageCode = key;
-                        // TODO Task C: record this translation in the appropriate instance variable
+                        String languageCode = countryData.getString(key);
 
-                        if (!languages.contains(languageCode)) {
-                            languages.add(languageCode);
+                        if (i == 0) {
+                            this.languageCodes.add(key);
                         }
+                        languages.add(languageCode);
                     }
+                }
+
+                for (int j = 0; j < languages.size(); j++) {
+                    String language = this.languageCodes.get(j);
+                    String translation = languages.get(j);
+                    String mapKey = countryCode + "-" + language;
+                    this.translations.put(mapKey, translation);
                 }
             }
         }
@@ -73,18 +81,17 @@ public class JSONTranslator implements Translator {
 
     @Override
     public List<String> getLanguageCodes() {
-        // TODO Task C: return a copy of the language codes
-        return new ArrayList<>();
+        return new ArrayList<>(this.languageCodes);
     }
 
     @Override
     public List<String> getCountryCodes() {
-        return new ArrayList<>(countryCodes);
+        return new ArrayList<>(this.countryCodes);
     }
 
     @Override
     public String translate(String countryCode, String languageCode) {
-        // TODO Task C: complete this method using your instance variables as needed
-        return "JSONTranslator's translate method is not implemented!";
+        String key =  countryCode + "-" + languageCode;
+        return this.translations.get(key);
     }
 }
