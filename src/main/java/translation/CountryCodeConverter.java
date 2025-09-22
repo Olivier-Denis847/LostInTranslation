@@ -41,7 +41,10 @@ public class CountryCodeConverter {
             while (iterator.hasNext()) {
                 String line = iterator.next();
                 String[] parts = line.split("\t");
-                // TODO Task B: use parts to populate the instance variables
+                String countryCode = parts[2];
+                String countryName = parts[0];
+                countryToCountryCode.put(countryName, countryCode);
+                countryCodeToCountry.put(countryCode, countryName);
             }
         }
         catch (IOException | URISyntaxException ex) {
@@ -56,8 +59,13 @@ public class CountryCodeConverter {
      * @return the name of the country corresponding to the code
      */
     public String fromCountryCode(String code) {
-        // TODO Task B: update this code to use an instance variable to return the correct value
-        return code;
+        for (String countryCode : countryCodeToCountry.keySet()) {
+            if (countryCode.equalsIgnoreCase(code)) {
+                String countryName = countryCodeToCountry.get(countryCode);
+                return countryName;
+            }
+        }
+        return null;
     }
 
     /**
@@ -66,8 +74,12 @@ public class CountryCodeConverter {
      * @return the 3-letter code of the country
      */
     public String fromCountry(String country) {
-        // TODO Task B: update this code to use an instance variable to return the correct value
-        return country;
+        for (String countryName: countryToCountryCode.keySet()) {
+        if (countryName.equalsIgnoreCase(country)) {
+            return countryToCountryCode.get(countryName);
+        }
+        }
+        return null;
     }
 
     /**
@@ -75,7 +87,6 @@ public class CountryCodeConverter {
      * @return how many countries are included in this country code converter.
      */
     public int getNumCountries() {
-        // TODO Task B: update this code to use an instance variable to return the correct value
-        return 0;
+            return countryCodeToCountry.size();
     }
 }
